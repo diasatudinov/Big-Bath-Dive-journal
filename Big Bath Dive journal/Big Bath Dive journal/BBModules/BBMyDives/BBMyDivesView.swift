@@ -20,28 +20,39 @@ struct BBMyDivesView: View {
                 
                 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Your personal underwater diary")
-                        .font(.system(size: 20, weight: .medium))
-                        .padding(.top, 8)
-                        .padding(.bottom, 115)
                     
-                    Image(.noDivesImageBB)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.horizontal, 31)
                     
-                    VStack(alignment: .center, spacing: 8) {
-                        Text("No dives yet")
-                            .font(.system(size: 24, weight: .semibold))
-                        // .multilineTextAlignment(.center)
-                        
-                        Text("Add your first one to start keeping an ocean diary.")
+                        Text("Your personal underwater diary")
                             .font(.system(size: 20, weight: .medium))
-                            .multilineTextAlignment(.center)
+                            .padding(.top, 8)
+                    
+                    if viewModel.myDives.isEmpty {
+                        Image(.noDivesImageBB)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(.horizontal, 31)
+                            .padding(.top, 115)
+                        
+                        VStack(alignment: .center, spacing: 8) {
+                            Text("No dives yet")
+                                .font(.system(size: 24, weight: .semibold))
+                            // .multilineTextAlignment(.center)
+                            
+                            Text("Add your first one to start keeping an ocean diary.")
+                                .font(.system(size: 20, weight: .medium))
+                                .multilineTextAlignment(.center)
+                        }
+                        Spacer()
+                        
+                    } else {
+                        ScrollView(showsIndicators: false) {
+                            VStack {
+                                ForEach(viewModel.myDives, id: \.self) { myDive in
+                                    BBDiveCell(dive: myDive)
+                                }
+                            }.padding(.top, 4).padding(.bottom)
+                        }
                     }
-                    Spacer()
-                    
-                    
                     
                 }.padding(.horizontal, 20)
                     .background(Color(hex: "DFF1FB"))
