@@ -9,139 +9,7 @@ import SwiftUI
 class BBMyDivesViewModel: ObservableObject {
     // MARK: – Dives
     @Published var myDives: [DiveModel] = [
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
         
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        ),
-        DiveModel(
-            location: .greatBlueHole,
-            date: Date.now,
-            depth: 27,
-            duration: 50,
-            mood: .happy,
-            wildlife: Wildlife(
-                name: "Azure Stingray",
-                description: "Wings with vivid blue edges that glow faintly in deep water."
-            )
-        )
     ] {
         didSet { saveMyDives() }
     }
@@ -180,13 +48,13 @@ struct DiveModel: Codable, Hashable {
     var id = UUID()
     var location: DiveLocation
     var date: Date
-    var depth: Double
-    var duration: Double
+    var depth: String
+    var duration: String
     var mood: Mood
     var wildlife: Wildlife
 }
 
-enum DiveLocation: String, Codable {
+enum DiveLocation: String, Codable, CaseIterable {
     case greatBlueHole = "Great Blue Hole"
     case coralBay = "Coral Bay"
     case mantaReef = "Manta Reef"
@@ -196,7 +64,8 @@ enum DiveLocation: String, Codable {
     
 }
 
-enum Mood: String, Codable {
+enum Mood: String, Codable, CaseIterable, Identifiable {
+    var id: String { rawValue }
     case happy = "happyIcon"
     case calm = "calmIcon"
     case neutral = "neutralIcon"

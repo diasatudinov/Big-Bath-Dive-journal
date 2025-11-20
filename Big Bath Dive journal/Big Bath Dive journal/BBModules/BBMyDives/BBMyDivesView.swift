@@ -36,7 +36,6 @@ struct BBMyDivesView: View {
                         VStack(alignment: .center, spacing: 8) {
                             Text("No dives yet")
                                 .font(.system(size: 24, weight: .semibold))
-                            // .multilineTextAlignment(.center)
                             
                             Text("Add your first one to start keeping an ocean diary.")
                                 .font(.system(size: 20, weight: .medium))
@@ -63,8 +62,9 @@ struct BBMyDivesView: View {
             
             VStack {
                 Spacer()
-                Button {
-                    
+                NavigationLink {
+                    BBNewDiveView(viewModel: viewModel)
+                        .navigationBarBackButtonHidden()
                 } label: {
                     Circle()
                         .fill(Color(hex: "FDE402") ?? .yellow)

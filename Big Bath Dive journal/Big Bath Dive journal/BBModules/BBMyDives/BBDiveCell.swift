@@ -27,7 +27,7 @@ struct BBDiveCell: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color(hex: "FDE402") ?? .yellow)
                 Spacer()
-                Text("\(Int(dive.depth)) m / \(Int(dive.duration)) min")
+                Text("\(dive.depth) m / \(dive.duration) min")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.white)
             }
@@ -44,8 +44,8 @@ struct BBDiveCell: View {
     BBDiveCell(dive: DiveModel(
         location: .greatBlueHole,
         date: Date.now,
-        depth: 27,
-        duration: 50,
+        depth: "27",
+        duration: "50",
         mood: .happy,
         wildlife: Wildlife(
             name: "Azure Stingray",

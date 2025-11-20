@@ -8,15 +8,17 @@ import SwiftUI
 
 struct BBMenuContainer: View {
     
-    @AppStorage("firstOpen") var firstOpen: Bool = true
+    @AppStorage("firstOpenBB") var firstOpen: Bool = true
     var body: some View {
-        ZStack {
-            if firstOpen {
-                BBOnboardingView(getStartBtnTapped: {
-                    firstOpen = false
-                })
-            } else {
-                BBMenuView()
+        NavigationStack {
+            ZStack {
+                if firstOpen {
+                    BBOnboardingView(getStartBtnTapped: {
+                        firstOpen = false
+                    })
+                } else {
+                    BBMenuView()
+                }
             }
         }
     }
@@ -24,6 +26,7 @@ struct BBMenuContainer: View {
 
 struct BBMenuView: View {
     @State var selectedTab = 0
+    @StateObject var diveViewModel = BBMyDivesViewModel()
     private let tabs = ["My dives", "Calendar", "Stats"]
         
     var body: some View {
@@ -31,7 +34,7 @@ struct BBMenuView: View {
             
             switch selectedTab {
             case 0:
-                BBMyDivesView(viewModel: BBMyDivesViewModel())
+                BBMyDivesView(viewModel: diveViewModel)
             case 1:
                 Text("2")
             case 2:
@@ -65,8 +68,6 @@ struct BBMenuView: View {
                     .padding(.horizontal, 30)
                     .background(Color(hex: "005399")?.opacity(0.8))
                     .clipShape(RoundedRectangle(cornerRadius: 20))
-                
-                
                 
             }.padding(.bottom, 30)
             .ignoresSafeArea()
@@ -105,5 +106,5 @@ struct BBMenuView: View {
 
 
 #Preview {
-    BBMenuView()
+    BBMenuContainer()
 }
