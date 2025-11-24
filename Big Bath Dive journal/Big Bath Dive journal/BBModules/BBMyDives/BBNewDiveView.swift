@@ -18,6 +18,7 @@ struct BBNewDiveView: View {
     @State private var depth: String = ""
     @State private var duration: String = ""
     @State private var mood: Mood?
+    @State private var wildlife: [Wildlife] = []
     
     private let columns = [
         GridItem(.adaptive(minimum: 50), spacing: 50)
@@ -203,10 +204,28 @@ struct BBNewDiveView: View {
                                 dataCollectCell(title: "Sea Creatures") {
                                     
                                     HStack(alignment: .bottom) {
-                                        TextField(text: $duration) {
-                                            Text("Enter duration")
-                                        }.keyboardType(.decimalPad)
                                         
+                                        if !wildlife.isEmpty {
+                                            Text(wildlife.first?.name ?? "")
+                                                .font(.system(size: 16, weight: .regular))
+                                            
+                                            
+                                        } else {
+                                            Text("Add Wildlife")
+                                                .font(.system(size: 16, weight: .regular))
+                                                .foregroundStyle(Color(hex: "969696") ?? .secondary)
+                                        }
+                                        Spacer()
+                                        
+                                        
+                                        NavigationLink {
+                                            BBWildlifeView(wildlifes: $wildlife)
+                                                .navigationBarBackButtonHidden()
+                                        } label: {
+                                            Text("+ Add")
+                                                .font(.system(size: 12, weight: .regular))
+                                                .foregroundStyle(Color(hex: "005399") ?? .blue)
+                                        }
                                         
                                     }
                                 }
@@ -221,11 +240,24 @@ struct BBNewDiveView: View {
                                         depth: depth,
                                         duration: duration,
                                         mood: mood,
-                                        wildlife: Wildlife(name: "", description: "")
+                                        wildlife: wildlife,
+                                        imageData: selectedImage.jpegData(compressionQuality: 0.8)
                                     ))
-                                    dismiss()
                                 }
                                 
+                                if let location = location, selectedImage == nil, depth != "", duration != "", let mood = mood {
+                                    viewModel.add(myDive: DiveModel(
+                                        location: location,
+                                        date: date,
+                                        depth: depth,
+                                        duration: duration,
+                                        mood: mood,
+                                        wildlife: wildlife
+                                    ))
+                                    
+                                }
+                                
+                                dismiss()
                             } label: {
                                 RoundedRectangle(cornerRadius: 15)
                                     .fill(checkDataFull() ? Color(hex: "FDE402") ?? .yellow : Color(hex: "969696") ?? .gray)
@@ -313,7 +345,7 @@ struct BBNewDiveView: View {
     }
     
     func checkDataFull() -> Bool {
-        selectedImage != nil && location != nil && depth != "" && duration != "" && mood != nil
+        location != nil && depth != "" && duration != "" && mood != nil
     }
     
     func loadImage() {

@@ -10,7 +10,7 @@ import SwiftUI
 struct Big_Bath_Dive_journalApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BBMenuContainer()
         }
     }
 }

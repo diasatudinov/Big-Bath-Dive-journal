@@ -44,13 +44,29 @@ struct BBMyDivesView: View {
                         Spacer()
                         
                     } else {
-                        ScrollView(showsIndicators: false) {
-                            VStack {
-                                ForEach(viewModel.myDives, id: \.self) { myDive in
-                                    BBDiveCell(dive: myDive)
-                                }
-                            }.padding(.top, 4).padding(.bottom)
-                        }
+//                        ScrollView(showsIndicators: false) {
+                        List {
+                            ForEach(viewModel.myDives, id: \.self) { myDive in
+                                BBDiveCell(dive: myDive)
+                                    .listRowSeparator(.hidden)
+                                    .listRowBackground(Color.clear)
+                                    .listRowInsets(
+                                        .init(top: 4,                         leading: 0,                     bottom: 4,                        trailing: 0)
+                                    )
+                                    .swipeActions() {
+                                        Button(role: .destructive) {
+                                            viewModel.delete(myDive: myDive)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
+                            }
+                            
+                        }.padding(.top, 4).padding(.bottom)
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .background(Color(hex: "DFF1FB"))
+                        
                     }
                     
                 }.padding(.horizontal, 20)
@@ -76,7 +92,7 @@ struct BBMyDivesView: View {
                         }
                 }
             }.padding(.bottom, 130)
-        }
+        }.background(Color(hex: "EBF8FF").ignoresSafeArea())
     }
 }
 

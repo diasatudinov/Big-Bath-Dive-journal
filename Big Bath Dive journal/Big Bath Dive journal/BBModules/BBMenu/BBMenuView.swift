@@ -36,9 +36,9 @@ struct BBMenuView: View {
             case 0:
                 BBMyDivesView(viewModel: diveViewModel)
             case 1:
-                Text("2")
+                BBDiveCalendarView(viewModel: diveViewModel)
             case 2:
-                Text("3")
+                DiveMoodStatsView(viewModel: diveViewModel)
             default:
                 Text("default")
             }

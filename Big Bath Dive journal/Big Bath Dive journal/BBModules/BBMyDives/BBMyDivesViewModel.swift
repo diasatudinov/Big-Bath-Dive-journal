@@ -15,8 +15,10 @@ class BBMyDivesViewModel: ObservableObject {
     }
     
     // MARK: – UserDefaults keys
-    private let myDivesKey = "myDivesKey"
-    
+    private var fileURL: URL {
+        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return dir.appendingPathComponent("myDives.json")
+    }
     // MARK: – Init
     init() {
         loadMyDives()
@@ -25,14 +27,27 @@ class BBMyDivesViewModel: ObservableObject {
     // MARK: – Save / Load Backgrounds
     
     private func saveMyDives() {
-        guard let data = try? JSONEncoder().encode(myDives) else { return }
-        UserDefaults.standard.set(data, forKey: myDivesKey)
+        let url = fileURL
+        do {
+            let data = try JSONEncoder().encode(myDives)
+            try data.write(to: url, options: [.atomic])
+        } catch {
+            print("Failed to save myDives:", error)
+        }
     }
     
     private func loadMyDives() {
-        if let data = UserDefaults.standard.data(forKey: myDivesKey),
-           let items = try? JSONDecoder().decode([DiveModel].self, from: data) {
-            myDives = items
+        let url = fileURL
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            return
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let dives = try JSONDecoder().decode([DiveModel].self, from: data)
+            myDives = dives
+        } catch {
+            print("Failed to load myDives:", error)
         }
     }
     
@@ -42,42 +57,49 @@ class BBMyDivesViewModel: ObservableObject {
         myDives.append(myDive)
         
     }
-}
-
-struct DiveModel: Codable, Hashable {
-    var id = UUID()
-    var location: DiveLocation
-    var date: Date
-    var depth: String
-    var duration: String
-    var mood: Mood
-    var wildlife: Wildlife
-}
-
-enum DiveLocation: String, Codable, CaseIterable {
-    case greatBlueHole = "Great Blue Hole"
-    case coralBay = "Coral Bay"
-    case mantaReef = "Manta Reef"
-    case turtleGarden = "Turtle Garden"
-    case blueRibbonCaves = "Blue Ribbon Caves"
-    case stingrayLaggon = "Stingray Lagoon"
     
-}
-
-enum Mood: String, Codable, CaseIterable, Identifiable {
-    var id: String { rawValue }
-    case happy = "happyIcon"
-    case calm = "calmIcon"
-    case neutral = "neutralIcon"
-    case nervous = "nervousIcon"
-    case excited = "excitedIcon"
-    case sad = "sadIcon"
-    case confident = "confidentIcon"
-    case angry = "angryIcon"
-}
-
-struct Wildlife: Codable, Hashable {
-    var id = UUID()
-    var name: String
-    var description: String
+    func delete(myDive: DiveModel) {
+        guard let index = myDives.firstIndex(of: myDive) else { return }
+        myDives.remove(at: index)
+    }
+    
+    func showAvgDepth(monthDives: [DiveModel]) -> Double {
+        var sumDepth = 0.0
+        for dive in monthDives {
+            sumDepth += (Double(dive.depth) ?? 0.0)
+        }
+        return sumDepth / Double(monthDives.count)
+    }
+    
+    func showAvgDuration(monthDives: [DiveModel]) -> Double {
+        var sumDuration = 0.0
+        for dive in monthDives {
+            sumDuration += (Double(dive.duration) ?? 0.0)
+        }
+        return sumDuration / Double(monthDives.count)
+    }
+    
+    func showTop10Wildlife(monthDives: [DiveModel]) -> [(wildlife: Wildlife, count: Int)] {
+        // Ключ — название, значение — (любой Wildlife с таким именем, количество)
+        var counts: [String: (wildlife: Wildlife, count: Int)] = [:]
+        
+        for dive in monthDives {
+            for item in dive.wildlife {
+                let name = item.name
+                
+                if var entry = counts[name] {
+                    entry.count += 1
+                    counts[name] = entry
+                } else {
+                    counts[name] = (wildlife: item, count: 1)
+                }
+            }
+        }
+        
+        // Берём массив значений, сортируем по count убыванию
+        let sorted = counts.values.sorted { $0.count > $1.count }
+        
+        // Возвращаем только топ-10
+        return Array(sorted.prefix(10))
+    }
 }

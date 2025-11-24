@@ -35,8 +35,8 @@ struct BBDiveCell: View {
         }
         .padding()
         .frame(height: 70)
-        .background(Color(hex: "005399"))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .background(Color(hex: "005399")?.opacity(0.8))
+        .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 
@@ -47,9 +47,9 @@ struct BBDiveCell: View {
         depth: "27",
         duration: "50",
         mood: .happy,
-        wildlife: Wildlife(
+        wildlife: [Wildlife(
             name: "Azure Stingray",
             description: "Wings with vivid blue edges that glow faintly in deep water."
-        )
+        )]
     ))
 }
